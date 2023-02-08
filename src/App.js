@@ -17,6 +17,7 @@ import Search from 'antd/es/transfer/search';
 
 function App() {
   const [foodsList, setFoodsList] = useState(foods);
+  const [filteredFoodsList, setfilteredFoodsList] = useState(foods);
 
   function handleAddNewFood(newFood) {
     setFoodsList((previousFood) => {
@@ -26,20 +27,29 @@ function App() {
   }
 
   function handleSearch(keyword){
-    const filteredFood=foods.filter((food)=>{
+    const filteredFood=foodsList.filter((food)=>{
         return food.name.toLocaleLowerCase().includes(keyword.toLocaleLowerCase());
     })
-    setFoodsList(filteredFood);
+    setfilteredFoodsList(filteredFood);
     }
+
+    function handleDeleteFood(foodName) {
+      const updatedFoodsList = filteredFoodsList.filter((food) => {
+        return food.name !== foodName;
+      });
+      setfilteredFoodsList(updatedFoodsList);
+    }
+
+
 
   return (
     <div className="App">
     <Search handleSearch={handleSearch} />
     <AddFoodForm handleAddNewFood={handleAddNewFood}></AddFoodForm>
-      {foodsList.map((food) => {
+      {filteredFoodsList.map((food) => {
         return (
           <div>
-            <FoodBox food={food} key={food.name} />
+            <FoodBox food={food} key={food.name} handleDeleteFood={handleDeleteFood} />
           </div>
         );
       })}
